@@ -1,0 +1,42 @@
+{#
+##  Copyright 2021 Catgirl.Moe contributors <https://catgirl.moe>
+##
+##  Licensed with GNU Affero General Public License v3.0 or later
+#}
+
+{% extends "base.html" %}
+
+{% block head %}
+  <title>Neko Memebin | {{ meme }}.webm</title>
+  <meta content="Neko Memebin | {{ meme }}.webm" property="og:title">
+  <meta property="og:type" content="video">
+  <meta property="og:url" content="/{{ meme }}">
+  <meta property="og:video" content="/api/memes/{{ meme }}/video.webm">
+  <script src="/assets/js/infiniteScroll.js"></script>
+{% endblock %}
+
+{% block content %}
+<div x-data="{ meme: {} }" class="flex flex-col lg:flex-row flex-nowrap justify-center w-full p-6 gap-6" x-init="fetch(`/api/memes/{{ meme }}`).then(response => response.json()).then(data => meme = data)">
+  <div class="max-w-320 flex-auto">
+    <video controls class="max-h-77vh w-full bg-black">
+      <source src="/api/memes/{{ meme }}/video.webm" type="video/webm">
+      Webm is not supported
+    </video>
+    <p class="text-light text-xl mt-6">{{ meme }}.webm</p>
+    <template x-if="meme">
+      <p class="text-light-900 text-sm mt-2" x-text="`${meme.views} views • ${new Date(meme.created).toLocaleDateString('en-us',{month:'long', year:'numeric', day:'numeric'})}`"></p>
+    </template>
+  </div>
+  <div class="flex flex-col flex-none w-100 gap-2" x-init="init()" x-data="infiniteScroll('/api/memes/{{ meme }}/similar?page=', '#load-similar')">
+    <template x-for="item in items">
+      <a :href="`/${item}`">
+        <img class="inline-block h-23.5 w-42" :src="`/api/memes/${item}/thumb.webp`">
+        <div class="inline-block ml-2 align-top">
+          <p class="text-light text-lg leading-none" x-text="`${item}.webm`"></p>
+        </div>
+      </a>
+    </template>
+    <div id="load-similar"></div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{#
+##  Copyright 2021 Catgirl.Moe contributors <https://catgirl.moe>
+##
+##  Licensed with GNU Affero General Public License v3.0 or later
+#}
+
+{% extends "base.html" %}
+
+{% block head %}
+  <title>Neko Memebin</title>
+  <meta content="Neko Memebin" property="og:title">
+  <script src="/assets/js/infiniteScroll.js"></script>
+  <script src="/assets/js/timeSince.js"></script>
+{% endblock %}
+
+{% block content %}
+<div x-data="infiniteScroll('/api/memes/latest?page=', '#memes-scroll-trigger')" x-init="init()">
+  <div class="flex flex-wrap justify-center p-5 gap-x-4 gap-y-12">
+    <template x-for="item in items">
+      <a :href="`/${item}`">
+        <img class="h-50.5 w-90" :src="`/api/memes/${item}/thumb.webp`"/>
+        <p class="text-light text-lg mt-1 font-semibold" x-text="`${item}.webm`"></p>
+        <!--${timeSince(new Date(meme.created))} ago -->
+      </a>
+    </template>
+  </div>
+  <div class="flex flex-wrap justify-center p-5 gap-4" id="memes-scroll-trigger">
+    <button class="text-accent text-2xl" x-on:click="loadMore()">Load More</button>
+  </div>
+</div>
+{% endblock %}
