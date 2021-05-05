@@ -5,13 +5,13 @@
 #}
 
 {% extends "base.html" %}
-
+~
 {% block head %}
   <title>Neko Memebin | {{ meme }}.webm</title>
   <meta content="Neko Memebin | {{ meme }}.webm" property="og:title">
   <meta property="og:type" content="video">
   <meta property="og:url" content="/{{ meme }}">
-  <meta property="og:video" content="/api/memes/{{ meme }}/video.webm">
+  <meta property="og:video" content="/m/{{ meme }}/full.webm">
   <script src="/assets/js/infiniteScroll.js"></script>
 {% endblock %}
 
@@ -19,7 +19,7 @@
 <div x-data="{ meme: {} }" class="flex flex-col lg:flex-row flex-nowrap justify-center w-full p-6 gap-6" x-init="fetch(`/api/memes/{{ meme }}`).then(response => response.json()).then(data => meme = data)">
   <div class="max-w-320 flex-auto">
     <video controls class="max-h-77vh w-full bg-black">
-      <source src="/api/memes/{{ meme }}/video.webm" type="video/webm">
+      <source src="/m/{{ meme }}/full.webm" type="video/webm">
       Webm is not supported
     </video>
     <p class="text-light text-xl mt-6">{{ meme }}.webm</p>
@@ -30,7 +30,7 @@
   <div class="flex flex-col flex-none w-100 gap-2" x-init="init()" x-data="infiniteScroll('/api/memes/{{ meme }}/similar?page=', '#load-similar')">
     <template x-for="item in items">
       <a :href="`/${item}`">
-        <img class="inline-block h-23.5 w-42" :src="`/api/memes/${item}/thumb.webp`">
+        <img class="inline-block h-23.5 w-42" :src="`/m/${item}/thumb.webp`">
         <div class="inline-block ml-2 align-top">
           <p class="text-light text-lg leading-none" x-text="`${item}.webm`"></p>
         </div>

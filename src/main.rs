@@ -16,6 +16,7 @@ use std::{io, env};
 
 mod api;
 mod frontend;
+mod media;
 
 //pub mod models;
 //pub mod schema;
@@ -31,6 +32,7 @@ async fn main() -> io::Result<()> {
       .service(Files::new("/assets", "./assets"))
       .service(api::scope())
       .service(frontend::scope())
+      .service(media::scope())
   })
   .bind(format!("0.0.0.0:{}", env::var("PORT").unwrap()))?
   .run()

@@ -6,7 +6,6 @@
 
 use crate::error::WebError;
 
-use actix_files::NamedFile;
 use actix_web::{get, HttpResponse, web, Scope};
 use serde_json::json;
 use std::{fs, path::Path};
@@ -41,16 +40,6 @@ async fn get_meme(web::Path(meme): web::Path<String>) -> Result<HttpResponse, We
   })))
 }
 
-#[get("/{meme:[a-z0-9]+}/video.webm")]
-async fn get_meme_webm(web::Path(meme): web::Path<String>) -> Result<NamedFile, WebError> {
-  Ok(NamedFile::open(Path::new("./data/").join(meme).with_extension("webm"))?)
-}
-
-#[get("/{meme:[a-z0-9]+}/thumb.webp")]
-async fn get_meme_webp(web::Path(meme): web::Path<String>) -> Result<NamedFile, WebError> {
-  Ok(NamedFile::open(Path::new("./thumbs/").join(meme).with_extension("webp"))?)
-}
-
 #[get("/{meme:[a-z0-9]+}/similar")]
 async fn get_meme_similar(web::Path(meme): web::Path<String>, q: web::Query<Query>) -> Result<HttpResponse, WebError> {
   Ok(HttpResponse::Ok().json(json!(list_files(25, q.page)?)))
@@ -60,7 +49,5 @@ pub fn scope() -> Scope {
   web::scope("/memes")
     .service(latest_memes)
     .service(get_meme)
-    .service(get_meme_webm)
-    .service(get_meme_webp)
     .service(get_meme_similar)
 }
