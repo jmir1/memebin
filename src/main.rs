@@ -31,8 +31,8 @@ async fn main() -> io::Result<()> {
       .wrap(middleware::Logger::default())
       .service(Files::new("/assets", "./assets"))
       .service(api::scope())
-      .service(frontend::scope())
       .service(media::scope())
+      .service(frontend::scope())
   })
   .bind(format!("0.0.0.0:{}", env::var("PORT").unwrap()))?
   .run()
